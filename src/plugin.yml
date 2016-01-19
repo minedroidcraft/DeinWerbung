@@ -1,0 +1,13 @@
+name: DeinWerbung
+main: bz.dcr.werbung.Main
+version: 0.1
+author: Minedroid
+commands:
+  werbung:
+    description: Werbetext buchen.
+    usage: /werbung <Text>
+    aliases: [w]
+permissions:
+  werbung.start:
+    description: Starte eine Werbung
+    default: true
