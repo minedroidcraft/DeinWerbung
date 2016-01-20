@@ -1,6 +1,6 @@
 name: DeinWerbung
 main: bz.dcr.werbung.Main
-version: 0.2
+version: 0.2.1
 author: Minedroid
 commands:
   werbung:

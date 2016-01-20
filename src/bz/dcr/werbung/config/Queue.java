@@ -128,6 +128,8 @@ public class Queue {
 			FileConfiguration cfg = getFileConfiguration();
 			Map<String, Object> bbmMap = cfg.getConfigurationSection("queue").getValues(false);
 			Entry<String, Object> entry = bbmMap.entrySet().iterator().next();
+			System.out.println(UUID.fromString(entry.getKey()));
+			System.out.println(String.valueOf(entry.getValue()));
 			return new BossbarMessage(UUID.fromString(entry.getKey()), String.valueOf(entry.getValue()));
 		}	
 		
