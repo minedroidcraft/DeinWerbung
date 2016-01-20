@@ -5,7 +5,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.confuser.barapi.BarAPI;
+import bz.dcr.werbung.bossbar.Bossbar;
+import bz.dcr.werbung.bossbar.BossbarMessage;
+import bz.dcr.werbung.config.Config;
+import bz.dcr.werbung.config.Queue;
 
 public class Commands implements CommandExecutor{
 
@@ -27,10 +30,30 @@ public class Commands implements CommandExecutor{
 								return true;
 							}
 						}
-						msg.substring(0, msg.length()-1);
+						msg = msg.substring(0, msg.length()-1);
 						
-						BarAPI.removeBar(p);
-						BarAPI.setMessage(p, msg, 20);
+						if(Queue.isPlayerInQueue(p)){
+							p.sendMessage(Main.PREFIX + "Du bist bereits in der Warteschlange.");
+							return true;
+						}
+						else{
+							if(Queue.isEmpty()){
+								Queue.addAdvertising(new BossbarMessage(p, msg));
+								new Bossbar(Config.getQueueLength()).start();
+							}
+							else{
+								Queue.addAdvertising(new BossbarMessage(p, msg));
+							}						
+						}
+						
+						
+//						if(!Main.bossbar.isEmpty()){
+//							
+//						}
+						
+						
+//						BarAPI.removeBar(p);
+//						BarAPI.setMessage(p, msg, 20);
 						return true;
 					}
 					else{

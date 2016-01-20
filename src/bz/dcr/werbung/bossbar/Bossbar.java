@@ -1,56 +1,71 @@
 package bz.dcr.werbung.bossbar;
 
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.Collection;
 
-public class Bossbar implements Runnable{
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
-	private ArrayList<BossbarMessage> barList= new ArrayList<>();
-	private BossbarMessage activeMessage = null;
+import bz.dcr.werbung.config.Queue;
+import me.confuser.barapi.BarAPI;
+
+public class Bossbar implements Runnable {
+
+	private Thread thread;
+	private boolean running;
+	private int duration;
 	
-	public ArrayList<BossbarMessage> getBarList() {
-		return barList;
+	public Bossbar(int duration) {
+		this.thread = new Thread(this);
+		this.duration = duration;
 	}
 
-	public void setBarMap(ArrayList<BossbarMessage> barMap) {
-		this.barList = barMap;
+	public void start() {
+		this.running = true;
+		this.thread.start();
 	}
-	
-	public boolean isPlayerInBarMap(UUID uuid){
-		for(BossbarMessage bbm : getBarList()){
-			if(bbm.getUUID().equals(uuid)){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public boolean isEmpty(){
-		return getBarList().isEmpty();
+
+	@SuppressWarnings("deprecation")
+	public void stop() {
+		this.running = false;
+		this.thread.stop();
 	}
 
 	@Override
 	public void run() {
-		while(!isEmpty()){
-			if(activeMessage == null){
-				BossbarMessage bbm = getBarList().get(0);
-				setActiveMessage(new BossbarMessage(bbm.getUUID(), bbm.getMessage()));
+		while (running) {
+			//Information
+			BossbarMessage bbm = Queue.getNext();
+			OfflinePlayer p = Bukkit.getOfflinePlayer(bbm.getUUID());
+			String message = bbm.getMessage();
+			Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+			//---------//			
+			for(Player player: onlinePlayers){
+				BarAPI.removeBar(player);
+				BarAPI.setMessage(player, "Werbung von " + p.getName());
 			}
 			
 			try {
-				Thread.sleep(500);
+				Thread.sleep(3000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			
+			for(Player player: onlinePlayers){
+				BarAPI.removeBar(player);
+				BarAPI.setMessage(player, message, duration);
+			}		
+			
+			try {
+				Thread.sleep(1000*this.duration);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			}
+			Queue.remove(bbm.getUUID());
+			if(Queue.isEmpty()){
+				this.stop();
 			}
 		}
 	}
 
-	public BossbarMessage getActiveMessage() {
-		return activeMessage;
-	}
-
-	public void setActiveMessage(BossbarMessage activeMessage) {
-		this.activeMessage = activeMessage;
-	}
-	
 }
