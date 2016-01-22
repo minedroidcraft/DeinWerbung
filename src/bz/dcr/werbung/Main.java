@@ -12,7 +12,7 @@ import net.milkbowl.vault.economy.Economy;
 
 public class Main extends JavaPlugin {
 
-	public static Economy econ = null;
+	private Economy econ = null;
 
 	@Override
 	public void onEnable() {
@@ -21,7 +21,7 @@ public class Main extends JavaPlugin {
 		new Queue().setStandard();
 
 		// Commands
-		this.getCommand("werbung").setExecutor(new Commands());
+		this.getCommand("werbung").setExecutor(new Commands(this.econ));
 
 		if (!setupEconomy()) {
 			System.err.println(Messages.PREFIX + "Bitte installiere Vault um dieses Plugin zu nutzen");
@@ -56,6 +56,4 @@ public class Main extends JavaPlugin {
 		econ = rsp.getProvider();
 		return econ != null;
 	}
-	
-
 }

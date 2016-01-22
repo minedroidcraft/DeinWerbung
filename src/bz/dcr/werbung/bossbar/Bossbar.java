@@ -41,7 +41,9 @@ public class Bossbar implements Runnable {
 			Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
 			//---------//			
 			for(Player player: onlinePlayers){
-				BarAPI.removeBar(player);
+				if(BarAPI.hasBar(player)){
+					BarAPI.removeBar(player);
+				}
 				BarAPI.setMessage(player, "Werbung von " + p.getName());
 			}
 			
@@ -52,7 +54,9 @@ public class Bossbar implements Runnable {
 			}
 			
 			for(Player player: onlinePlayers){
-				BarAPI.removeBar(player);
+				if(BarAPI.hasBar(player)){
+					BarAPI.removeBar(player);
+				}
 				BarAPI.setMessage(player, message, duration);
 			}		
 			

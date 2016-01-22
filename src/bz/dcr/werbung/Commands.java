@@ -10,9 +10,16 @@ import bz.dcr.werbung.bossbar.BossbarMessage;
 import bz.dcr.werbung.config.Config;
 import bz.dcr.werbung.config.Queue;
 import bz.dcr.werbung.util.Messages;
+import net.milkbowl.vault.economy.Economy;
 
 public class Commands implements CommandExecutor {
 
+	private Economy econ;
+	
+	public Commands(Economy econ) {
+		this.econ = econ;
+	}
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -25,8 +32,8 @@ public class Commands implements CommandExecutor {
 				if (p.hasPermission("werbung.start")) {
 					if (args.length >= 1) {
 
-						if (Main.econ.getBalance(p) >= price) {
-							Main.econ.withdrawPlayer(p, price);
+						if (this.econ.getBalance(p) >= price) {
+							this.econ.withdrawPlayer(p, price);
 
 							String msg = "";
 
